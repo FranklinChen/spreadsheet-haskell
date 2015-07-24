@@ -12,6 +12,8 @@ spec = do
   describe "Spreadsheet" $ do
     it "handles dependency changes" $ do
       changeDependencies >>= (`shouldBe` (3, 102, 20))
+    it "handles dependencies of many types" $ do
+      differentTypesDependencies >>= (`shouldBe` (7, 5))
 
 -- | Example of a graph of cells.
 threeCells :: Exp (Cell Int, Cell Int, Cell Int)
@@ -51,3 +53,36 @@ changeDependencies = do
   c20 <- evalExp $ get c
 
   return (c3, c102, c20)
+
+-- | Example of a graph of cells with different types.
+differentTypesCells :: Exp (Cell String, Cell Int, Cell Int)
+differentTypesCells = do
+  a <- cell $ return "hello"
+
+  b <- cell $ return 2
+
+  -- c = a + b
+  c <- cell $ do
+    aValue <- get a
+    bValue <- get b
+    return $ length aValue + bValue
+
+  return (a, b, c)
+
+-- | Example of propagating changes for cells with different types.
+differentTypesDependencies :: IO (Int, Int)
+differentTypesDependencies = do
+  (a, b, c) <- evalExp differentTypesCells
+
+  -- c = length a + b = 5 + 2 = 7
+  c7 <- evalExp $ get c
+
+  -- b = 3
+  set b $ return 3
+
+  -- a = "no"
+  -- So c = length a + b = 2 + 3 = 5
+  set a $ return "no"
+  c5 <- evalExp $ get c
+
+  return (c7, c5)
