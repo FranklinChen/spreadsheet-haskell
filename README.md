@@ -9,3 +9,4 @@ This is an attempt at an idiomatic Haskell translation of a highly imperative da
 - [OCaml](https://github.com/FranklinChen/spreadsheet-ocaml)
 - [Scala](https://github.com/FranklinChen/spreadsheet-scala)
 - [Haskell](https://github.com/FranklinChen/spreadsheet-haskell)
+- [Ruby](https://github.com/FranklinChen/spreadsheet-ruby)
