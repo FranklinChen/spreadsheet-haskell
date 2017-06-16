@@ -1,8 +1,13 @@
+-- This file has been generated from package.yaml by hpack version 0.17.1.
+--
+-- see: https://github.com/sol/hpack
+
 name:                spreadsheet
 version:             0.1.0.0
 synopsis:            Model a spreadsheet
 description:         Model a spreadsheet
-homepage:            https://github.com/FranklinChen/spreadsheet-haskell
+homepage:            https://github.com/FranklinChen/spreadsheet-haskell#readme
+bug-reports:         https://github.com/FranklinChen/spreadsheet-haskell/issues
 license:             BSD3
 license-file:        LICENSE
 author:              Franklin Chen
@@ -10,28 +15,39 @@ maintainer:          franklinchen@franklinchen.com
 copyright:           Franklin Chen
 category:            Game
 build-type:          Simple
-extra-source-files:  README.md
-cabal-version:       >=1.10
-tested-with:         GHC==7.10.1, GHC==7.10.2
+cabal-version:       >= 1.10
+tested-with:         GHC==7.10.1 GHC==7.10.2
+
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/FranklinChen/spreadsheet-haskell
 
 library
-  default-language:    Haskell2010
-  hs-source-dirs:      src
-  ghc-options:         -Wall
-  exposed-modules:     Spreadsheet
-  build-depends:       base >= 4 && <= 5
+  default-language: Haskell2010
+  hs-source-dirs:
+      src
+  ghc-options: -Wall
+  exposed-modules:
+      Spreadsheet
+  other-modules:
+      Paths_spreadsheet
+  build-depends:
+      base >=4 && <=5
 
 test-suite spec
   type: exitcode-stdio-1.0
-  default-language:    Haskell2010
-  hs-source-dirs:      test
-  ghc-options:         -Wall
-  main-is:             Spec.hs
-  build-depends:       base >= 4 && <= 5
-                     , spreadsheet
-                     , hspec
-                     , QuickCheck
-
-source-repository head
-  type:                 git
-  location:             https://github.com/FranklinChen/spreadsheet-haskell
+  default-language: Haskell2010
+  hs-source-dirs:
+      test
+  ghc-options: -Wall
+  main-is: Spec.hs
+  build-depends:
+      base >=4 && <=5
+    , spreadsheet
+    , hspec
+    , QuickCheck
+  other-modules:
+      SpreadsheetSpec

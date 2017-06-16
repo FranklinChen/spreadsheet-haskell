@@ -1,0 +1,29 @@
+name: spreadsheet
+version: '0.1.0.0'
+synopsis: Model a spreadsheet
+description: Model a spreadsheet
+category: Game
+author: Franklin Chen
+maintainer: franklinchen@franklinchen.com
+copyright: Franklin Chen
+license: BSD3
+github: FranklinChen/spreadsheet-haskell
+tested-with: GHC==7.10.1 GHC==7.10.2
+extra-source-files:
+- README.md
+dependencies:
+- base >=4 && <=5
+library:
+  source-dirs: src
+  ghc-options: -Wall
+  exposed-modules:
+  - Spreadsheet
+tests:
+  spec:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options: -Wall
+    dependencies:
+    - spreadsheet
+    - hspec
+    - QuickCheck
