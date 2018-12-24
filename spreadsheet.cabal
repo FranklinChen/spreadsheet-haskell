@@ -1,8 +1,10 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3635c97a986f99f2b2ae32d0260beeef27c5229633bfeb06140ec3576d0e323e
+-- hash: a01f5c5271174c6758defc923308851f897c766249cfeab6e3ead0411a0be3a1
 
 name:           spreadsheet
 version:        0.1.0.0
@@ -17,7 +19,6 @@ copyright:      Franklin Chen
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
-cabal-version:  >= 1.10
 extra-source-files:
     README.md
 
