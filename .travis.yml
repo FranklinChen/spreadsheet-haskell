@@ -89,7 +89,11 @@ matrix:
     addons: {apt: {packages: [ghc-8.4.3], sources: [hvr-ghc]}}
 
   - env: BUILD=stack ARGS="--resolver lts-13"
-    compiler: ": #stack 8.6.3"
+    compiler: ": #stack 8.6.5"
+    addons: {apt: {packages: [ghc-8.4.3], sources: [hvr-ghc]}}
+
+  - env: BUILD=stack ARGS="--resolver lts-14"
+    compiler: ": #stack 8.6.5"
     addons: {apt: {packages: [ghc-8.4.3], sources: [hvr-ghc]}}
 
   # Nightly builds are allowed to fail
@@ -135,7 +139,11 @@ matrix:
     os: osx
 
   - env: BUILD=stack ARGS="--resolver lts-13"
-    compiler: ": #stack 8.6.3 osx"
+    compiler: ": #stack 8.6.5 osx"
+    os: osx
+
+  - env: BUILD=stack ARGS="--resolver lts-14"
+    compiler: ": #stack 8.6.5 osx"
     os: osx
 
   - env: BUILD=stack ARGS="--resolver nightly"
