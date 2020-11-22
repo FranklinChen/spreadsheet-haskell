@@ -1,42 +1,48 @@
 {-# LANGUAGE GADTs #-}
 
 -- | Haskell version of spreadsheet demo from <http://semantic-domain.blogspot.com/2015/07/how-to-implement-spreadsheet.html Neel Krishnaswami's blog post>.
-module Spreadsheet (
-                     -- * Types
-                     Cell
-                   , Exp
+module Spreadsheet
+  ( -- * Types
+    Cell,
+    Exp,
 
-                     -- * Cell operations
-                   , cell
-                   , get
-                   , set
+    -- * Cell operations
+    cell,
+    get,
+    set,
 
-                     -- * Expression elimination
-                   , evalExp
-                   ) where
+    -- * Expression elimination
+    evalExp,
+  )
+where
 
 import Control.Monad (ap, liftM)
 import Data.IORef
-import Data.Unique (Unique, newUnique)
 import Data.List (union)
+import Data.Unique (Unique, newUnique)
 
 -- | Container for a value that can depend on other cells
 -- through a code expression.
 --
 -- Has a unique identity, even across different cell types.
-data Cell a =
-  Cell { _code :: IORef (Exp a)      -- ^ expression to run
-       , _value :: IORef (Maybe a)   -- ^ value memoized from running code
-       , _reads :: IORef [ECell]     -- ^ cells that were read
-       , _observers :: IORef [ECell] -- ^ cells that read this cell
-       , _id :: Unique               -- ^ globally unique token
-       }
+data Cell a = Cell
+  { -- | expression to run
+    _code :: IORef (Exp a),
+    -- | value memoized from running code
+    _value :: IORef (Maybe a),
+    -- | cells that were read
+    _reads :: IORef [ECell],
+    -- | cells that read this cell
+    _observers :: IORef [ECell],
+    -- | globally unique token
+    _id :: Unique
+  }
 
 -- | A computed result, along with the cells read during computation.
 data Result a = Result a [ECell]
 
 -- | An expression that is run to give a result.
-newtype Exp a = Exp { runExp :: IO (Result a) }
+newtype Exp a = Exp {runExp :: IO (Result a)}
 
 -- | Existential type: "a cell of some type".
 -- Used for a heterogeneous list of different types of cells.
@@ -49,8 +55,6 @@ instance Eq ECell where
 
 instance Monad Exp where
   return v = Exp $ return $ Result v []
-
-  -- | Combine all the cells that were read.
   cmd >>= f = Exp $ do
     Result a cs <- runExp cmd
     Result b ds <- runExp (f a)
@@ -58,21 +62,22 @@ instance Monad Exp where
 
 -- | Boilerplate for monad.
 instance Applicative Exp where
-   (<*>) = ap
-   pure = return
+  (<*>) = ap
+  pure = return
 
 -- | Boilerplate for monad.
 instance Functor Exp where
-   fmap = liftM
+  fmap = liftM
 
 -- | Construct a cell.
 cell :: Exp a -> Exp (Cell a)
 cell e = Exp $ do
-  newCell <- Cell <$> newIORef e
-                  <*> newIORef Nothing
-                  <*> newIORef []
-                  <*> newIORef []
-                  <*> newUnique
+  newCell <-
+    Cell <$> newIORef e
+      <*> newIORef Nothing
+      <*> newIORef []
+      <*> newIORef []
+      <*> newUnique
   return $ Result newCell []
 
 -- | Evaluate a cell to get its value.

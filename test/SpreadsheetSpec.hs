@@ -1,8 +1,7 @@
 module SpreadsheetSpec (main, spec) where
 
-import Test.Hspec
-
 import Spreadsheet
+import Test.Hspec
 
 main :: IO ()
 main = hspec spec
