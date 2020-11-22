@@ -1,12 +1,12 @@
 # Spreadsheet simulation in Haskell, translated from OCaml
 
-[![Build Status](https://travis-ci.org/FranklinChen/spreadsheet-haskell.svg)](https://travis-ci.org/FranklinChen/spreadsheet-haskell)
+![Continuous Integration](https://github.com/FranklinChen/spreadsheet-haskell/workflows/Continuous%20Integration/badge.svg)
 
 This is an attempt at an idiomatic Haskell translation of a highly imperative dataflow system given in ["How to implement a spreadsheet"](http://semantic-domain.blogspot.com/2015/07/how-to-implement-spreadsheet.html).
 
 ## Build and run
 
-The Haskell project uses [Stack](http://haskellstack.org/).
+The Haskell project uses Stack but of course you can just use Cabal.
 
 Run the tests with
 
