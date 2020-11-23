@@ -1,6 +1,6 @@
 # Spreadsheet simulation in Haskell, translated from OCaml
 
-![Continuous Integration](https://github.com/FranklinChen/spreadsheet-haskell/workflows/Continuous%20Integration/badge.svg)
+![CI](https://github.com/FranklinChen/spreadsheet-haskell/workflows/CI/badge.svg)
 
 This is an attempt at an idiomatic Haskell translation of a highly imperative dataflow system given in ["How to implement a spreadsheet"](http://semantic-domain.blogspot.com/2015/07/how-to-implement-spreadsheet.html).
 
