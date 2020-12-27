@@ -17,10 +17,8 @@ library:
   source-dirs: src
 tests:
   spec:
+    defaults: hspec/hspec@master
     main: Spec.hs
-    verbatim:
-      build-tool-depends:
-        hspec-discover:hspec-discover
     source-dirs: test
     dependencies:
     - spreadsheet
