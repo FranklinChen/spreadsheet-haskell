@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.2.
+-- This file has been generated from package.yaml by hpack version 0.34.3.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 689800e0ab1790d8fefadd032aac40fb0196c7f653bef3cbcfbef67acf1009db
+-- hash: cb82fa60b451470e5fd0fda7c5015ab7fbdfff650efd82ad1b701da54941b764
 
 name:           spreadsheet
 version:        0.1.0.0
@@ -53,4 +53,4 @@ test-suite spec
     , hspec
     , spreadsheet
   default-language: Haskell2010
-  build-tool-depends: hspec-discover:hspec-discover
+  build-tool-depends: hspec-discover:hspec-discover == 2.*
