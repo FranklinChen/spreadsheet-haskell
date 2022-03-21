@@ -1,6 +1,6 @@
 {-# LANGUAGE GADTs #-}
 
--- | Haskell version of spreadsheet demo from <http://semantic-domain.blogspot.com/2015/07/how-to-implement-spreadsheet.html Neel Krishnaswami's blog post>.
+-- | Haskell version of spreadsheet demo from <https://semantic-domain.blogspot.com/2015/07/how-to-implement-spreadsheet.html Neel Krishnaswami's blog post>.
 module Spreadsheet
   ( -- * Types
     Cell,
@@ -17,7 +17,14 @@ module Spreadsheet
 where
 
 import Control.Monad (ap, liftM)
+import Data.Foldable (traverse_)
 import Data.IORef
+  ( IORef,
+    modifyIORef,
+    newIORef,
+    readIORef,
+    writeIORef,
+  )
 import Data.List (union)
 import Data.Unique (Unique, newUnique)
 
@@ -54,16 +61,16 @@ instance Eq ECell where
   Pack x == Pack y = _id x == _id y
 
 instance Monad Exp where
-  return v = Exp $ return $ Result v []
+  return = pure
   cmd >>= f = Exp $ do
     Result a cs <- runExp cmd
     Result b ds <- runExp (f a)
-    return $ Result b (cs `union` ds)
+    pure $ Result b (cs `union` ds)
 
 -- | Boilerplate for monad.
 instance Applicative Exp where
   (<*>) = ap
-  pure = return
+  pure v = Exp $ pure $ Result v []
 
 -- | Boilerplate for monad.
 instance Functor Exp where
@@ -78,20 +85,20 @@ cell e = Exp $ do
       <*> newIORef []
       <*> newIORef []
       <*> newUnique
-  return $ Result newCell []
+  pure $ Result newCell []
 
 -- | Evaluate a cell to get its value.
 get :: Cell a -> Exp a
 get c = Exp $ do
   cValue <- readIORef (_value c)
   case cValue of
-    Just v -> return $ Result v [Pack c]
+    Just v -> pure $ Result v [Pack c]
     Nothing -> do
       Result v ds <- runExp =<< readIORef (_code c)
       writeIORef (_value c) (Just v)
       writeIORef (_reads c) ds
-      mapM_ (\(Pack d) -> modifyIORef (_observers d) (Pack c :)) ds
-      return $ Result v [Pack c]
+      traverse_ (\(Pack d) -> modifyIORef (_observers d) (Pack c :)) ds
+      pure $ Result v [Pack c]
 
 -- | Remove a cell from another cell's observers.
 removeObserver :: ECell -> ECell -> IO ()
@@ -106,8 +113,8 @@ invalidate (Pack c) = do
   writeIORef (_observers c) []
   writeIORef (_value c) Nothing
   writeIORef (_reads c) []
-  mapM_ (removeObserver (Pack c)) rs
-  mapM_ invalidate os
+  traverse_ (removeObserver (Pack c)) rs
+  traverse_ invalidate os
 
 -- | Set a cell's code.
 set :: Cell a -> Exp a -> IO ()
@@ -119,4 +126,4 @@ set c e = do
 evalExp :: Exp a -> IO a
 evalExp cmd = do
   Result a _ <- runExp cmd
-  return a
+  pure a

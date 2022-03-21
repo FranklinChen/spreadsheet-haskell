@@ -17,17 +17,17 @@ spec = do
 -- | Example of a graph of cells.
 threeCells :: Exp (Cell Int, Cell Int, Cell Int)
 threeCells = do
-  a <- cell $ return 1
+  a <- cell $ pure 1
 
-  b <- cell $ return 2
+  b <- cell $ pure 2
 
   -- c = a + b
   c <- cell $ do
     aValue <- get a
     bValue <- get b
-    return $ aValue + bValue
+    pure $ aValue + bValue
 
-  return (a, b, c)
+  pure (a, b, c)
 
 -- | Example of propagating changes.
 changeDependencies :: IO (Int, Int, Int)
@@ -39,7 +39,7 @@ changeDependencies = do
 
   -- a = 100
   -- So c = a + b = 100 + 2 = 102
-  set a $ return 100
+  set a $ pure 100
   c102 <- evalExp $ get c
 
   -- a = b*b
@@ -47,26 +47,26 @@ changeDependencies = do
   -- So c = a + b = 4*4 + 4 = 20
   set a $ do
     bValue <- get b
-    return $ bValue * bValue
-  set b $ return 4
+    pure $ bValue * bValue
+  set b $ pure 4
   c20 <- evalExp $ get c
 
-  return (c3, c102, c20)
+  pure (c3, c102, c20)
 
 -- | Example of a graph of cells with different types.
 differentTypesCells :: Exp (Cell String, Cell Int, Cell Int)
 differentTypesCells = do
-  a <- cell $ return "hello"
+  a <- cell $ pure "hello"
 
-  b <- cell $ return 2
+  b <- cell $ pure 2
 
   -- c = a + b
   c <- cell $ do
     aValue <- get a
     bValue <- get b
-    return $ length aValue + bValue
+    pure $ length aValue + bValue
 
-  return (a, b, c)
+  pure (a, b, c)
 
 -- | Example of propagating changes for cells with different types.
 differentTypesDependencies :: IO (Int, Int)
@@ -77,11 +77,11 @@ differentTypesDependencies = do
   c7 <- evalExp $ get c
 
   -- b = 3
-  set b $ return 3
+  set b $ pure 3
 
   -- a = "no"
   -- So c = length a + b = 2 + 3 = 5
-  set a $ return "no"
+  set a $ pure "no"
   c5 <- evalExp $ get c
 
-  return (c7, c5)
+  pure (c7, c5)
