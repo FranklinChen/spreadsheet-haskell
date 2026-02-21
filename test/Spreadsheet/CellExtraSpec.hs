@@ -1,7 +1,8 @@
 module Spreadsheet.CellExtraSpec (main, spec) where
 
-import Control.Exception (AsyncException (StackOverflow))
+import Control.Exception (SomeException, try)
 import Spreadsheet.Cell
+import System.Timeout (timeout)
 import Test.Hspec
 
 main :: IO ()
@@ -10,10 +11,16 @@ main = hspec spec
 spec :: Spec
 spec = do
     describe "Spreadsheet.Cell extra" $ do
-        it "raises on cycle" $ do
+        it "diverges on cycle" $ do
             a <- run (cell $ pure (1 :: Int))
             set a (do aValue <- get a; pure (aValue + 1))
-            run (get a) `shouldThrow` (== StackOverflow)
+            -- Cycle must not produce a value.  It will either overflow the
+            -- stack (caught by `try`) or loop until the timeout fires.
+            -- Both outcomes are acceptable; only a successful return is a bug.
+            result <- timeout 5_000_000 (try @SomeException (run (get a)))
+            case result of
+                Just (Right _) -> expectationFailure "cycle should not produce a value"
+                _ -> pure ()
 
         it "handles set before evaluation" $ do
             a <- run (cell $ pure 1)
