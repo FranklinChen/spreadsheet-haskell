@@ -6,12 +6,12 @@ This is an attempt at an idiomatic Haskell translation of a highly imperative da
 
 ## Build and run
 
-The Haskell project uses Stack but of course you can just use Cabal.
+The Haskell project uses Cabal.
 
 Run the tests with
 
 ```console
-$ stack test
+$ cabal test all
 ```
 
 ## Compare different implementations

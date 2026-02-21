@@ -1,6 +1,6 @@
-module SpreadsheetSpec (main, spec) where
+module Spreadsheet.CellSpec (main, spec) where
 
-import Spreadsheet
+import Spreadsheet.Cell
 import Test.Hspec
 
 main :: IO ()
@@ -8,7 +8,7 @@ main = hspec spec
 
 spec :: Spec
 spec = do
-    describe "Spreadsheet" $ do
+    describe "Spreadsheet.Cell" $ do
         it "handles dependency changes" $ do
             changeDependencies >>= (`shouldBe` (3, 102, 20))
         it "handles dependencies of many types" $ do
@@ -32,15 +32,15 @@ threeCells = do
 -- | Example of propagating changes.
 changeDependencies :: IO (Int, Int, Int)
 changeDependencies = do
-    (a, b, c) <- evalExp threeCells
+    (a, b, c) <- run threeCells
 
     -- c = a + b = 1 + 2 = 3
-    c3 <- evalExp $ get c
+    c3 <- run $ get c
 
     -- a = 100
     -- So c = a + b = 100 + 2 = 102
     set a $ pure 100
-    c102 <- evalExp $ get c
+    c102 <- run $ get c
 
     -- a = b*b
     -- b = 4
@@ -49,7 +49,7 @@ changeDependencies = do
         bValue <- get b
         pure $ bValue * bValue
     set b $ pure 4
-    c20 <- evalExp $ get c
+    c20 <- run $ get c
 
     pure (c3, c102, c20)
 
@@ -60,7 +60,7 @@ differentTypesCells = do
 
     b <- cell $ pure 2
 
-    -- c = a + b
+    -- c = length a + b
     c <- cell $ do
         aValue <- get a
         bValue <- get b
@@ -71,10 +71,10 @@ differentTypesCells = do
 -- | Example of propagating changes for cells with different types.
 differentTypesDependencies :: IO (Int, Int)
 differentTypesDependencies = do
-    (a, b, c) <- evalExp differentTypesCells
+    (a, b, c) <- run differentTypesCells
 
     -- c = length a + b = 5 + 2 = 7
-    c7 <- evalExp $ get c
+    c7 <- run $ get c
 
     -- b = 3
     set b $ pure 3
@@ -82,6 +82,6 @@ differentTypesDependencies = do
     -- a = "no"
     -- So c = length a + b = 2 + 3 = 5
     set a $ pure "no"
-    c5 <- evalExp $ get c
+    c5 <- run $ get c
 
     pure (c7, c5)
